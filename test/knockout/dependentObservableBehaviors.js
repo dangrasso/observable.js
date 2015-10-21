@@ -670,6 +670,23 @@ describe('Dependent Observable', function() {
             // value outside of computed is undefined
             assert(ko.computedContext.getDependenciesCount()).toBeUndefined();
         });
+
+        it('Should read the same value of computed observables after writing the same value multiple times', function() {
+            var observable = ko.observable();
+            var computed = ko.computed({
+                read: function() {
+                    return observable() + '[read]';
+                },
+                write: function(value) {
+                    observable(value);
+                }
+            });
+            computed('input');
+            assert(computed()).toEqual('input[read]');
+
+            computed('input');
+            assert(computed()).toEqual('input[read]');
+        });
     });
 });
 
